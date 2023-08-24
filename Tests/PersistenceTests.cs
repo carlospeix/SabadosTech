@@ -17,17 +17,17 @@ public class PersistenceTests
         _context.Database.ExecuteSqlRaw("DELETE FROM Customers");
         _context.Database.ExecuteSqlRaw("DELETE FROM Products");
 
-        var vsc = new Product() { Name = "Visual Studio Code" };
-        var vim = new Product() { Name = "Vim" };
+        var vsc = new Product("Visual Studio Code");
+        var vim = new Product("Vim");
         _context.Products.Add(vsc);
         _context.Products.Add(vim);
 
-        var c = new Customer() { Name = "Sabados Tech", Country = "Argentina" };
+        var c = new Customer("Sabados Tech", "Argentina");
         _context.Customers.Add(c);
 
-        var o = new Order() { Customer = c, CreatedOn = DateTime.Now };
-        o.Items.Add(new OrderItem() { Product = vsc });
-        o.Items.Add(new OrderItem() { Product = vim });
+        var o = new Order(c);
+        o.AddItem(vsc);
+        o.AddItem(vim);
         _context.Orders.Add(o);
 
         _context.SaveChanges();
