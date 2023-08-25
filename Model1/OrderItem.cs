@@ -4,7 +4,7 @@ public class OrderItem
 {
     private OrderItem() { }
 
-    public OrderItem(Order order, Product product, int quantity = 1)
+    public OrderItem(Order order, Product product, int quantity)
     {
         Order = order;
         Product = product;

@@ -8,17 +8,17 @@ public class Order
     {
         Customer = customer;
         CreatedOn = DateTime.Now;
-        Items = new List<OrderItem>();
     }
 
     public int Id { get; private set; }
     public DateTime CreatedOn { get; private set; }
     public Customer Customer { get; private set; }
 
-    public virtual IList<OrderItem> Items { get; private set; }
+    public IReadOnlyCollection<OrderItem> Items => _items.ToList().AsReadOnly();
+    private readonly HashSet<OrderItem> _items = new();
 
-    public void AddItem(Product product)
+    public void AddItem(Product product, int quantity = 1)
     {
-        Items.Add(new OrderItem(this, product));
+        _items.Add(new OrderItem(this, product, quantity));
     }
 }

@@ -16,6 +16,8 @@ public class ApplicationContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
+
         modelBuilder.Entity<Product>().HasKey(t => t.Id);
 
         modelBuilder.Entity<Customer>().HasKey(t => t.Id);
