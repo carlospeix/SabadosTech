@@ -60,20 +60,20 @@ public class AnalysisTests
     [Test]
     public void DebugView()
     {
+        TestContext.Out.WriteLine("= MODEL ======================================================");
+        TestContext.Out.WriteLine(_context.Model.ToDebugString());
         TestContext.Out.WriteLine("= DEBUG ======================================================");
-        TestContext.Out.Write(_context.Model.ToDebugString());
+        TestContext.Out.WriteLine(_context.ChangeTracker.DebugView.LongView);
     }
 
-    private string OrderToString(Order order)
+    private static string OrderToString(Order order)
     {
         var builder = new StringBuilder();
 
         builder.AppendLine($"Order: #{order.Id}, CreatedOn {order.CreatedOn}");
         builder.AppendLine($"  for Customer: {order.Customer.Name} from {order.Customer.Country}");
         foreach ( var item in order.Items )
-        {
             builder.AppendLine($"    -> Item: {item.Product.Name} / {item.Quantity}");
-        }
 
         return builder.ToString();
     }

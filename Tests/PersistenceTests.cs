@@ -64,6 +64,34 @@ public class PersistenceTests
     }
 
     [Test]
+    public void ShouldFailBecauseOfOrderItemReferentialIntegrity()
+    {
+        Assert.Throws<InvalidOperationException>(delegate {
+            _context.Products.Remove(_context.Products.First());
+            _context.SaveChanges();
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(_context.Database.SqlQuery<int>($"SELECT COUNT(*) FROM OrderItems").ToArray()[0], Is.EqualTo(2));
+            Assert.That(_context.Products.Count(), Is.EqualTo(2));
+        });
+    }
+
+    [Test]
+    public void ShouldFailBecauseOfOrderReferentialIntegrity()
+    {
+        Assert.Throws<InvalidOperationException>(delegate {
+            _context.Customers.Remove(_context.Customers.First());
+            _context.SaveChanges();
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(_context.Orders.Count(), Is.EqualTo(1));
+            Assert.That(_context.Customers.Count(), Is.EqualTo(1));
+        });
+    }
+
+    [Test]
     public void CascadingDeleteOnOrder()
     {
         var o = _context.Orders.First();

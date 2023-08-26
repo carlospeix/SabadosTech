@@ -25,11 +25,11 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<Order>().HasKey(t => t.Id);
         modelBuilder.Entity<Order>().HasMany(t => t.Items).WithOne(t => t.Order).IsRequired();
         modelBuilder.Entity<Order>().Navigation(t => t.Items).AutoInclude();
-        modelBuilder.Entity<Order>().HasOne(t => t.Customer).WithMany().IsRequired();
+        modelBuilder.Entity<Order>().HasOne(t => t.Customer).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<Order>().Navigation(t => t.Customer).AutoInclude();
 
         modelBuilder.Entity<OrderItem>().ToTable("OrderItems").HasKey(t => t.Id);
-        modelBuilder.Entity<OrderItem>().HasOne(t => t.Product).WithMany().IsRequired();
+        modelBuilder.Entity<OrderItem>().HasOne(t => t.Product).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<OrderItem>().Navigation(t => t.Product).AutoInclude();
     }
 
