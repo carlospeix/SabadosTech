@@ -12,18 +12,14 @@ public class PersistenceTests
     public void Setup()
     {
         _context = new ApplicationContext();
-        _context.Database.ExecuteSqlRaw("DELETE FROM OrderItems");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Orders");
+        _context.Orders.RemoveRange(_context.Orders);
+        _context.SaveChanges();
 
         var vsc = _context.Products.Single(c => c.Id == 1);
         var vim = _context.Products.Single(c => c.Id == 2);
-        var arg = _context.Countries.Single(c => c.Id == 1);
         var c = _context.Customers.Single(c => c.Id == 1);
 
-        var o = new Order(c);
-        o.AddItem(vsc);
-        o.AddItem(vim);
-        _context.Orders.Add(o);
+        _context.Orders.Add(CreateOrder());
 
         _context.SaveChanges();
     }
@@ -31,8 +27,9 @@ public class PersistenceTests
     [TearDown]
     public void TearDown()
     {
-        _context.Database.ExecuteSqlRaw("DELETE FROM OrderItems");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Orders");
+        _context.ChangeTracker.Clear();
+        _context.Orders.RemoveRange(_context.Orders);
+        _context.SaveChanges();
         _context.Dispose();
     }
 
@@ -127,5 +124,18 @@ public class PersistenceTests
             // Hack, because OrderItems is not exposed
             Assert.That(_context.Database.SqlQuery<int>($"SELECT COUNT(*) FROM OrderItems").ToArray()[0], Is.EqualTo(0));
         });
+    }
+
+    private Order CreateOrder()
+    {
+        var vsc = _context.Products.Single(c => c.Id == 1);
+        var vim = _context.Products.Single(c => c.Id == 2);
+        var customer = _context.Customers.Single(c => c.Id == 1);
+
+        var order = new Order(customer);
+        order.AddItem(vsc);
+        order.AddItem(vim);
+
+        return order;
     }
 }

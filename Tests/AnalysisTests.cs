@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Mapping1;
 using Model1;
@@ -8,50 +7,41 @@ namespace Tests;
 public class AnalysisTests
 {
     ApplicationContext _context;
-    int _orderId;
 
     [SetUp]
     public void Setup()
     {
         _context = new ApplicationContext();
-        _context.Database.ExecuteSqlRaw("DELETE FROM OrderItems");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Orders");
-
-        var vsc = _context.Products.Single(c => c.Id == 1);
-        var vim = _context.Products.Single(c => c.Id == 2);
-        var arg = _context.Countries.Single(c => c.Id == 1);
-        var c = _context.Customers.Single(c => c.Id == 1);
-
-        var o = new Order(c);
-        o.AddItem(vsc);
-        o.AddItem(vim);
-        _context.Orders.Add(o);
-
-        _context.SaveChanges();
-
-        _orderId = o.Id;
     }
 
     [TearDown]
     public void TearDown()
     {
-        _context.Database.ExecuteSqlRaw("DELETE FROM OrderItems");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Orders");
         _context.Dispose();
     }
 
     [Test]
     public void QueryOrderFullGraph()
     {
-        using var readContext = new ApplicationContext();
+        var order = CreateOrder();
+        _context.Orders.Add(order);
+        _context.SaveChanges();
 
-        var order = readContext.Orders
-            .Single(o => o.Id == _orderId);
+        try
+        {
+            using var readContext = new ApplicationContext();
 
-        var orderText = OrderToString(order);
+            var orderText = OrderToString(
+                readContext.Orders.Single(o => o.Id == order.Id));
 
-        TestContext.Out.WriteLine("= ORDER ======================================================");
-        TestContext.Out.WriteLine(orderText);
+            TestContext.Out.WriteLine("= ORDER ======================================================");
+            TestContext.Out.WriteLine(orderText);
+        }
+        finally
+        {
+            _context.Orders.Remove(order);
+            _context.SaveChanges();
+        }
     }
 
     [Test]
@@ -74,4 +64,18 @@ public class AnalysisTests
 
         return builder.ToString();
     }
+
+    private Order CreateOrder()
+    {
+        var vsc = _context.Products.Single(c => c.Id == 1);
+        var vim = _context.Products.Single(c => c.Id == 2);
+        var customer = _context.Customers.Single(c => c.Id == 1);
+
+        var order = new Order(customer);
+        order.AddItem(vsc);
+        order.AddItem(vim);
+
+        return order;
+    }
+
 }
