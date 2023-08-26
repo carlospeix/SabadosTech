@@ -4,7 +4,7 @@ public class Customer
 {
     private Customer() { }
 
-    public Customer(string name, string country)
+    public Customer(string name, Country country)
     {
         Name = name;
         Country = country;
@@ -12,5 +12,5 @@ public class Customer
 
     public int Id { get; private set; }
     public string Name { get; set; }
-    public string Country { get; set; }
+    public Country Country { get; set; }
 }

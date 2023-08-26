@@ -24,7 +24,9 @@ public class AnalysisTests
         _context.Products.Add(vsc);
         _context.Products.Add(vim);
 
-        var c = new Customer("Sabados Tech", "Argentina");
+        var arg = _context.Countries.Single(c => c.Id == 1);
+
+        var c = new Customer("Sabados Tech", arg);
         _context.Customers.Add(c);
 
         var o = new Order(c);
@@ -40,6 +42,10 @@ public class AnalysisTests
     [TearDown]
     public void TearDown()
     {
+        _context.Database.ExecuteSqlRaw("DELETE FROM OrderItems");
+        _context.Database.ExecuteSqlRaw("DELETE FROM Orders");
+        _context.Database.ExecuteSqlRaw("DELETE FROM Customers");
+        _context.Database.ExecuteSqlRaw("DELETE FROM Products");
         _context.Dispose();
     }
 

@@ -22,7 +22,8 @@ public class PersistenceTests
         _context.Products.Add(vsc);
         _context.Products.Add(vim);
 
-        var c = new Customer("Sabados Tech", "Argentina");
+        var arg = _context.Countries.Single(c => c.Id == 1);
+        var c = new Customer("Sabados Tech", arg);
         _context.Customers.Add(c);
 
         var o = new Order(c);
@@ -36,6 +37,10 @@ public class PersistenceTests
     [TearDown]
     public void TearDown()
     {
+        _context.Database.ExecuteSqlRaw("DELETE FROM OrderItems");
+        _context.Database.ExecuteSqlRaw("DELETE FROM Orders");
+        _context.Database.ExecuteSqlRaw("DELETE FROM Customers");
+        _context.Database.ExecuteSqlRaw("DELETE FROM Products");
         _context.Dispose();
     }
 
@@ -64,12 +69,13 @@ public class PersistenceTests
     }
 
     [Test]
-    public void ShouldFailBecauseOfOrderItemReferentialIntegrity()
+    public void ShouldFailBecauseOfProductReferentialIntegrity()
     {
         Assert.Throws<InvalidOperationException>(delegate {
             _context.Products.Remove(_context.Products.First());
             _context.SaveChanges();
         });
+
         Assert.Multiple(() =>
         {
             Assert.That(_context.Database.SqlQuery<int>($"SELECT COUNT(*) FROM OrderItems").ToArray()[0], Is.EqualTo(2));
@@ -78,16 +84,33 @@ public class PersistenceTests
     }
 
     [Test]
-    public void ShouldFailBecauseOfOrderReferentialIntegrity()
+    public void ShouldFailBecauseOfCustomerReferentialIntegrity()
     {
         Assert.Throws<InvalidOperationException>(delegate {
             _context.Customers.Remove(_context.Customers.First());
             _context.SaveChanges();
         });
+
         Assert.Multiple(() =>
         {
             Assert.That(_context.Orders.Count(), Is.EqualTo(1));
             Assert.That(_context.Customers.Count(), Is.EqualTo(1));
+        });
+    }
+
+    [Test]
+    public void ShouldFailBecauseOfCountryReferentialIntegrity()
+    {
+        var argentina = _context.Countries.Single(c => c.Id == 1);
+        Assert.Throws<InvalidOperationException>(delegate {
+            _context.Countries.Remove(argentina);
+            _context.SaveChanges();
+        });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_context.Orders.Count(), Is.EqualTo(1));
+            Assert.That(_context.Countries.Count(), Is.EqualTo(6));
         });
     }
 
