@@ -14,17 +14,11 @@ public class PersistenceTests
         _context = new ApplicationContext();
         _context.Database.ExecuteSqlRaw("DELETE FROM OrderItems");
         _context.Database.ExecuteSqlRaw("DELETE FROM Orders");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Customers");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Products");
 
-        var vsc = new Product("Visual Studio Code");
-        var vim = new Product("Vim");
-        _context.Products.Add(vsc);
-        _context.Products.Add(vim);
-
+        var vsc = _context.Products.Single(c => c.Id == 1);
+        var vim = _context.Products.Single(c => c.Id == 2);
         var arg = _context.Countries.Single(c => c.Id == 1);
-        var c = new Customer("Sabados Tech", arg);
-        _context.Customers.Add(c);
+        var c = _context.Customers.Single(c => c.Id == 1);
 
         var o = new Order(c);
         o.AddItem(vsc);
@@ -39,21 +33,7 @@ public class PersistenceTests
     {
         _context.Database.ExecuteSqlRaw("DELETE FROM OrderItems");
         _context.Database.ExecuteSqlRaw("DELETE FROM Orders");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Customers");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Products");
         _context.Dispose();
-    }
-
-    [Test]
-    public void CanCreateTwoProducts()
-    {
-        Assert.That(_context.Products.Count(), Is.EqualTo(2));
-    }
-
-    [Test]
-    public void CanCreateACustomer()
-    {
-        Assert.That(_context.Customers.Count(), Is.EqualTo(1));
     }
 
     [Test]
@@ -71,39 +51,41 @@ public class PersistenceTests
     [Test]
     public void ShouldFailBecauseOfProductReferentialIntegrity()
     {
+        var vsc = _context.Products.Single(c => c.Id == 1);
         Assert.Throws<InvalidOperationException>(delegate {
-            _context.Products.Remove(_context.Products.First());
+            _context.Products.Remove(vsc);
             _context.SaveChanges();
         });
 
         Assert.Multiple(() =>
         {
             Assert.That(_context.Database.SqlQuery<int>($"SELECT COUNT(*) FROM OrderItems").ToArray()[0], Is.EqualTo(2));
-            Assert.That(_context.Products.Count(), Is.EqualTo(2));
+            Assert.That(_context.Products.Count(), Is.EqualTo(6));
         });
     }
 
     [Test]
     public void ShouldFailBecauseOfCustomerReferentialIntegrity()
     {
+        var c = _context.Customers.Single(c => c.Id == 1);
         Assert.Throws<InvalidOperationException>(delegate {
-            _context.Customers.Remove(_context.Customers.First());
+            _context.Customers.Remove(c);
             _context.SaveChanges();
         });
 
         Assert.Multiple(() =>
         {
             Assert.That(_context.Orders.Count(), Is.EqualTo(1));
-            Assert.That(_context.Customers.Count(), Is.EqualTo(1));
+            Assert.That(_context.Customers.Count(), Is.EqualTo(4));
         });
     }
 
     [Test]
     public void ShouldFailBecauseOfCountryReferentialIntegrity()
     {
-        var argentina = _context.Countries.Single(c => c.Id == 1);
+        var arg = _context.Countries.Single(c => c.Id == 1);
         Assert.Throws<InvalidOperationException>(delegate {
-            _context.Countries.Remove(argentina);
+            _context.Countries.Remove(arg);
             _context.SaveChanges();
         });
 
@@ -123,8 +105,8 @@ public class PersistenceTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(_context.Products.Count, Is.EqualTo(2));
-            Assert.That(_context.Customers.Count, Is.EqualTo(1));
+            Assert.That(_context.Products.Count, Is.EqualTo(6));
+            Assert.That(_context.Customers.Count, Is.EqualTo(4));
             Assert.That(_context.Orders.Count, Is.EqualTo(0));
             // Hack, because OrderItems is not exposed
             Assert.That(_context.Database.SqlQuery<int>($"SELECT COUNT(*) FROM OrderItems").ToArray()[0], Is.EqualTo(0));

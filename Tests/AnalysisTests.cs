@@ -16,18 +16,11 @@ public class AnalysisTests
         _context = new ApplicationContext();
         _context.Database.ExecuteSqlRaw("DELETE FROM OrderItems");
         _context.Database.ExecuteSqlRaw("DELETE FROM Orders");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Customers");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Products");
 
-        var vsc = new Product("Visual Studio Code");
-        var vim = new Product("Vim");
-        _context.Products.Add(vsc);
-        _context.Products.Add(vim);
-
+        var vsc = _context.Products.Single(c => c.Id == 1);
+        var vim = _context.Products.Single(c => c.Id == 2);
         var arg = _context.Countries.Single(c => c.Id == 1);
-
-        var c = new Customer("Sabados Tech", arg);
-        _context.Customers.Add(c);
+        var c = _context.Customers.Single(c => c.Id == 1);
 
         var o = new Order(c);
         o.AddItem(vsc);
@@ -44,8 +37,6 @@ public class AnalysisTests
     {
         _context.Database.ExecuteSqlRaw("DELETE FROM OrderItems");
         _context.Database.ExecuteSqlRaw("DELETE FROM Orders");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Customers");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Products");
         _context.Dispose();
     }
 
