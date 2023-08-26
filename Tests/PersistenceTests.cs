@@ -97,6 +97,22 @@ public class PersistenceTests
     }
 
     [Test]
+    public void ShouldFailBecauseOfCateogryReferentialIntegrity()
+    {
+        var prog = _context.Categories.Single(c => c.Id == 2);
+        Assert.Throws<InvalidOperationException>(delegate {
+            _context.Categories.Remove(prog);
+            _context.SaveChanges();
+        });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_context.Products.Count(), Is.EqualTo(6));
+            Assert.That(_context.Categories.Count(), Is.EqualTo(4));
+        });
+    }
+
+    [Test]
     public void CascadingDeleteOnOrder()
     {
         var o = _context.Orders.First();

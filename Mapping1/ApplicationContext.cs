@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Model1;
-using System.Reflection.Metadata;
 
 namespace Mapping1;
 
@@ -20,6 +19,7 @@ public class ApplicationContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
 
         modelBuilder.Entity<Product>().HasKey(t => t.Id);
+        modelBuilder.Entity<Product>().HasOne(t => t.Category).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Customer>().HasKey(t => t.Id);
         modelBuilder.Entity<Customer>().HasOne(t => t.Country).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
@@ -41,4 +41,5 @@ public class ApplicationContext : DbContext
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<Country> Countries { get; set; }
+    public DbSet<Category> Categories { get; set; }
 }
