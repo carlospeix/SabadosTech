@@ -23,6 +23,17 @@ public class Order
         UpdateTotal();
     }
 
+    public void RemoveItemFor(Product aProduct)
+    {
+        var item = _items.FirstOrDefault(oi => oi.Product == aProduct);
+        if (item == null)
+        {
+            return;
+        }
+        _items.Remove(item);
+        UpdateTotal();
+    }
+
     public decimal Total { get; private set; }
 
     public void IncreaseQuantityFor(Product aProduct)

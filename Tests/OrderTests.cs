@@ -96,4 +96,15 @@ public class OrderTests
 
         Assert.That(order.Items, Has.Count.EqualTo(1));
     }
+
+    [Test]
+    public void CanRemoveItem()
+    {
+        var order = new Order(aCustomer);
+        order.AddItem(aProduct, 1);
+        order.RemoveItemFor(aProduct);
+
+        Assert.That(order.Items, Is.Empty);
+        Assert.That(order.Total, Is.EqualTo(0));
+    }
 }
