@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Mapping1;
 using Model1;
 
@@ -56,7 +55,8 @@ public class PersistenceTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(_context.Database.SqlQuery<int>($"SELECT COUNT(*) FROM OrderItems").ToArray()[0], Is.EqualTo(2));
+            // ... because OrderItems is not exposed
+            Assert.That(_context.Set<OrderItem>().Count, Is.EqualTo(2));
             Assert.That(_context.Products.Count(), Is.EqualTo(6));
         });
     }
@@ -121,8 +121,8 @@ public class PersistenceTests
             Assert.That(_context.Products.Count, Is.EqualTo(6));
             Assert.That(_context.Customers.Count, Is.EqualTo(4));
             Assert.That(_context.Orders.Count, Is.EqualTo(0));
-            // Hack, because OrderItems is not exposed
-            Assert.That(_context.Database.SqlQuery<int>($"SELECT COUNT(*) FROM OrderItems").ToArray()[0], Is.EqualTo(0));
+            // ... because OrderItems is not exposed
+            Assert.That(_context.Set<OrderItem>().Count, Is.EqualTo(0));
         });
     }
 
