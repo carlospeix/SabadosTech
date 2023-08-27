@@ -10,6 +10,7 @@ public class OrderItem
         Product = product;
         Quantity = quantity;
         ProductPriceWhenOrdered = product.Price;
+        UpdateTotal();
     }
 
     public int Id { get; private set; }
@@ -18,12 +19,19 @@ public class OrderItem
     public virtual Product Product { get; private set; }
     public int Quantity { get; private set; }
     public decimal ProductPriceWhenOrdered { get; private set; }
-    public decimal Total => Quantity * ProductPriceWhenOrdered;
+    public decimal Total { get; private set; }
 
     internal void IncreaseQuantity() => ChangeQuantityBy(1);
     internal void DecreaseQuantity() => ChangeQuantityBy(-1);
+    
     private void ChangeQuantityBy(int quantityChangeBy)
     {
         Quantity += quantityChangeBy;
+        UpdateTotal();
+    }
+
+    private void UpdateTotal()
+    {
+        Total = Quantity * ProductPriceWhenOrdered;
     }
 }

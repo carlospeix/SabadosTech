@@ -92,7 +92,7 @@ public class OrderTests
     {
         var order = new Order(aCustomer);
         order.AddItem(aProduct, 1);
-        order.DecreaseQuantityFor(new Product("Notepad", aCategory));
+        order.DecreaseQuantityFor(new Product("Notepad", aCategory, 10.0m));
 
         Assert.That(order.Items, Has.Count.EqualTo(1));
     }

@@ -4,7 +4,7 @@ public class Product
 {
     private Product() { }
 
-    public Product(string name, Category category, decimal price = 10) // TODO: Remove default
+    public Product(string name, Category category, decimal price)
     {
         Name = name;
         Category = category;
