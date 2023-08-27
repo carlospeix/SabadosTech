@@ -19,6 +19,7 @@ public class ApplicationContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
 
         modelBuilder.Entity<Product>().HasKey(t => t.Id);
+        modelBuilder.Entity<Product>().Property(t => t.Price).HasColumnType("decimal").HasPrecision(18, 2);
         modelBuilder.Entity<Product>().HasOne(t => t.Category).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Customer>().HasKey(t => t.Id);
@@ -31,6 +32,7 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<Order>().Navigation(t => t.Customer).AutoInclude();
 
         modelBuilder.Entity<OrderItem>().ToTable("OrderItems").HasKey(t => t.Id);
+        modelBuilder.Entity<OrderItem>().Property(t => t.ProductPriceWhenOrdered).HasColumnType("decimal").HasPrecision(18, 2);
         modelBuilder.Entity<OrderItem>().HasOne(t => t.Product).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<OrderItem>().Navigation(t => t.Product).AutoInclude();
 

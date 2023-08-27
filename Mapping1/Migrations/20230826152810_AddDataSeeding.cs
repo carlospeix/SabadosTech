@@ -20,10 +20,10 @@ namespace Mapping1.Migrations
             });
 
             migrationBuilder.InsertData(table: "Customers", columns: new[] { "Id", "Name", "CountryId" }, values: new object[,] {
-                { 1, "Homero Simpson", 1 },
-                { 2, "Marge Simpson", 1 },
-                { 3, "Moe", 1 },
-                { 4, "Mr. Burns", 1}
+                { 1, "José Larralde", 1 },
+                { 2, "Alfredo Zitarrosa", 5 },
+                { 3, "Rita Lee", 4 },
+                { 4, "Bruce Springsteen", 6}
             });
         }
 

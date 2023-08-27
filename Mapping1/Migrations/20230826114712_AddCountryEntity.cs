@@ -41,7 +41,7 @@ namespace Mapping1.Migrations
                 { 3, "Uruguay" },
                 { 4, "Brasil" },
                 { 5, "Paraguay" },
-                { 6, "Bolivia" }
+                { 6, "USA" }
             });
 
             migrationBuilder.CreateIndex(

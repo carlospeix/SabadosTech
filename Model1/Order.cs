@@ -21,4 +21,33 @@ public class Order
     {
         _items.Add(new OrderItem(this, product, quantity));
     }
+
+    public decimal Total => _items.Sum(oi => oi.Total);
+
+    public void IncreaseQuantityFor(Product aProduct)
+    {
+        var item = _items.FirstOrDefault(oi => oi.Product == aProduct);
+        if (item == null)
+        {
+            return;
+        }
+        item.IncreaseQuantity();
+    }
+
+    public void DecreaseQuantityFor(Product aProduct)
+    {
+        var item = _items.FirstOrDefault(oi => oi.Product == aProduct);
+        if (item == null)
+        {
+            return;
+        }
+        if (item.Quantity == 1)
+        {
+            _items.Remove(item);
+        }
+        else
+        {
+            item.DecreaseQuantity();
+        }   
+    }
 }
