@@ -1,4 +1,5 @@
 using System.Text;
+using Newtonsoft.Json;
 using Mapping1;
 using Model1;
 
@@ -44,6 +45,34 @@ public class AnalysisTests
         }
     }
 
+    [Test, Explicit]
+    public void Report()
+    {
+        var report = _context.Set<OrderItem>()
+            .GroupBy(oi => new { CountryName = oi.Order.Customer.Country.Name, CategoryName = oi.Product.Category.Name })
+            .Select(countryGroup => new {
+                countryGroup.Key.CountryName,
+                countryGroup.Key.CategoryName,
+                Quantity = countryGroup.Sum(oi => oi.Quantity)
+            })
+            .ToList();
+
+        TestContext.Out.WriteLine(JsonConvert.SerializeObject(report, Formatting.Indented));
+    }
+
+    [Test, Explicit]
+    public void XGenerate20Orders()
+    {
+        CreateOrderBulk();
+    }
+
+    [Test, Explicit]
+    public void XRemoveOrders()
+    {
+        _context.Orders.RemoveRange(_context.Orders);
+        _context.SaveChanges();
+    }
+
     [Test]
     public void DebugView()
     {
@@ -78,4 +107,20 @@ public class AnalysisTests
         return order;
     }
 
+    private void CreateOrderBulk()
+    {
+        var rnd = new Random();
+
+        for (int i = 0; i < 20; i++)
+        {
+            var customerId = rnd.Next(1, 5);
+            var productId = rnd.Next(1, 7);
+            var quantity = rnd.Next(1, 15);
+            var order = new Order(_context.Customers.Single(c => c.Id == customerId));
+            order.AddItem(_context.Products.Single(c => c.Id == productId), quantity);
+            _context.Orders.Add(order);
+        }
+
+        _context.SaveChanges();
+    }
 }
