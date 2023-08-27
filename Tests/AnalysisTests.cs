@@ -46,14 +46,16 @@ public class AnalysisTests
     }
 
     [Test, Explicit]
-    public void Report()
+    public void ReportSalesByCountryAndCategory()
     {
         var report = _context.Set<OrderItem>()
             .GroupBy(oi => new { CountryName = oi.Order.Customer.Country.Name, CategoryName = oi.Product.Category.Name })
-            .Select(countryGroup => new {
-                countryGroup.Key.CountryName,
-                countryGroup.Key.CategoryName,
-                Quantity = countryGroup.Sum(oi => oi.Quantity)
+            .Select(group => new
+            {
+                group.Key.CountryName,
+                group.Key.CategoryName,
+                Quantity = group.Sum(oi => oi.Quantity),
+                Amount = group.Sum(oi => oi.Total)
             })
             .ToList();
 
