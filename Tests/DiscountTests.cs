@@ -5,16 +5,15 @@ namespace Tests;
 public class DiscountTests
 {
     Customer aCustomer;
-    Country argentina;
-    Category programmingCategory;
-    Category sportsCategory;
-    Product programmingProduct;
-    Product sportsProduct;
+    Country argentina, uruguay;
+    Category programmingCategory, sportsCategory;
+    Product programmingProduct, sportsProduct;
 
     [SetUp]
     public void Setup()
     {
         argentina = new Country("Argentina");
+        uruguay = new Country("Uruguay");
         programmingCategory = new Category("Programming");
         sportsCategory = new Category("Electronics");
         aCustomer = new Customer("Sabados Tech", argentina);
@@ -72,5 +71,18 @@ public class DiscountTests
         order.ApplyDiscount(discount);
 
         Assert.That(order.Total, Is.EqualTo(299.95m * 0.92m));
+    }
+
+    [Test]
+    public void UruguayanCouponDoesNotChangeTotalOnArgentinianOrder()
+    {
+        var order = new Order(aCustomer);
+        order.AddItem(programmingProduct, 1);
+        Assert.That(order.Total, Is.EqualTo(9.95m));
+
+        var discount = new Discount(name: "Charruan coupon", percentage: 5, country: uruguay);
+        order.ApplyDiscount(discount);
+
+        Assert.That(order.Total, Is.EqualTo(9.95m));
     }
 }
