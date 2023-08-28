@@ -1,5 +1,6 @@
 using System.Text;
 using Newtonsoft.Json;
+using Application;
 using Mapping1;
 using Model1;
 
@@ -24,16 +25,15 @@ public class AnalysisTests
     [Test]
     public void QueryOrderFullGraph()
     {
-        var order = CreateOrder();
-        _context.Orders.Add(order);
-        _context.SaveChanges();
+        var ordersApp = new Orders();
+        var order = ordersApp.CreateOrder(customerId: 1)!;
+
+        ordersApp.AddProductToOrder(orderId: order.Id, productId: 1, quantity: 1);
+        ordersApp.AddProductToOrder(orderId: order.Id, productId: 2, quantity: 1);
 
         try
         {
-            using var readContext = new ApplicationContext();
-
-            var orderText = OrderToString(
-                readContext.Orders.Single(o => o.Id == order.Id));
+            var orderText = OrderToString(ordersApp.GetById(order.Id));
 
             TestContext.Out.WriteLine("= ORDER ======================================================");
             TestContext.Out.WriteLine(orderText);
@@ -48,16 +48,8 @@ public class AnalysisTests
     [Test, Explicit]
     public void ReportSalesByCountryAndCategory()
     {
-        var report = _context.Set<OrderItem>()
-            .GroupBy(oi => new { CountryName = oi.Order.Customer.Country.Name, CategoryName = oi.Product.Category.Name })
-            .Select(group => new
-            {
-                group.Key.CountryName,
-                group.Key.CategoryName,
-                Quantity = group.Sum(oi => oi.Quantity),
-                Amount = group.Sum(oi => oi.Total)
-            })
-            .ToList();
+        var reportsApp = new Reports();
+        var report = reportsApp.SalesByCountryAndCategory();
 
         TestContext.Out.WriteLine(JsonConvert.SerializeObject(report, Formatting.Indented));
     }
@@ -84,8 +76,11 @@ public class AnalysisTests
         TestContext.Out.WriteLine(_context.ChangeTracker.DebugView.LongView);
     }
 
-    private static string OrderToString(Order order)
+    private static string OrderToString(Order? order)
     {
+        if (order == null)
+            return "order is null";
+
         var builder = new StringBuilder();
 
         builder.AppendLine($"Order: #{order.Id}, CreatedOn {order.CreatedOn}");

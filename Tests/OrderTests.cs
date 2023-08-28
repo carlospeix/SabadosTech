@@ -1,6 +1,3 @@
-using System.Text;
-using Mapping1;
-using Microsoft.EntityFrameworkCore;
 using Model1;
 
 namespace Tests;

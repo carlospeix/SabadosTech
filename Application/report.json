@@ -1,0 +1,14 @@
+﻿[
+    {"CountryName":"Argentina","CategoryName":"Electronics","Quantity":7,"Amount":210.00},
+    {"CountryName":"Paraguay","CategoryName":"Electronics","Quantity":11,"Amount":330.00},
+    {"CountryName":"USA","CategoryName":"Electronics","Quantity":2,"Amount":60.00},
+    {"CountryName":"Argentina","CategoryName":"Programming","Quantity":14,"Amount":140.00},
+    {"CountryName":"Brasil","CategoryName":"Programming","Quantity":25,"Amount":250.00},
+    {"CountryName":"USA","CategoryName":"Programming","Quantity":19,"Amount":11069.00},
+    {"CountryName":"Brasil","CategoryName":"Sports","Quantity":16,"Amount":160.00},
+    {"CountryName":"Paraguay","CategoryName":"Sports","Quantity":27,"Amount":2580.00},
+    {"CountryName":"USA","CategoryName":"Sports","Quantity":15,"Amount":1470.00}
+]
+
+
+
