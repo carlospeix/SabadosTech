@@ -70,8 +70,22 @@ public class Order
         UpdateTotal();
     }
 
+    public void ApplyDiscount(Discount discount)
+    {
+        if (discount.AppliesTo(this))
+        {
+            _appliedDiscounts.Add(discount);
+        }
+        UpdateTotal();
+    }
+    private readonly HashSet<Discount> _appliedDiscounts = new();
+
     private void UpdateTotal()
     {
         Total = _items.Sum(oi => oi.Total);
+        foreach (var discount in _appliedDiscounts)
+        {
+            Total = Total * (1 - discount.Percentage / 100);
+        }
     }
 }
