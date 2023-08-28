@@ -54,7 +54,7 @@ public class DiscountTests
         order.AddItem(programmingProduct, 1);
         Assert.That(order.Total, Is.EqualTo(9.95m));
 
-        var discount = new Discount(name: "Sports coupon", percentage: 8, category: sportsCategory);
+        var discount = new DiscountForCategory(name: "Sports coupon", percentage: 8, category: sportsCategory);
         order.ApplyDiscount(discount);
 
         Assert.That(order.Total, Is.EqualTo(9.95m));
@@ -67,7 +67,7 @@ public class DiscountTests
         order.AddItem(sportsProduct, 1);
         Assert.That(order.Total, Is.EqualTo(299.95m));
 
-        var discount = new Discount(name: "Sports coupon", percentage: 8, category: sportsCategory);
+        var discount = new DiscountForCategory(name: "Sports coupon", percentage: 8, category: sportsCategory);
         order.ApplyDiscount(discount);
 
         Assert.That(order.Total, Is.EqualTo(299.95m * 0.92m));
@@ -80,7 +80,8 @@ public class DiscountTests
         order.AddItem(programmingProduct, 1);
         Assert.That(order.Total, Is.EqualTo(9.95m));
 
-        var discount = new Discount(name: "Charruan coupon", percentage: 5, country: uruguay);
+        //var discount = new Discount(name: "Charruan coupon", percentage: 5, country: uruguay);
+        var discount = new DiscountForCountry(name: "Charruan coupon", percentage: 5, country: uruguay);
         order.ApplyDiscount(discount);
 
         Assert.That(order.Total, Is.EqualTo(9.95m));
