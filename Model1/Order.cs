@@ -92,6 +92,7 @@ public class Order
     {
         ItemsTotal = _items.Sum(oi => oi.Total);
 
+        Discount = 0m;
         foreach (var discount in _appliedDiscounts)
         {
             Discount += discount.Apply(this);

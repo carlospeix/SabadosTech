@@ -23,4 +23,14 @@ public class DiscountForCountry : Discount
 
         return false;
     }
+
+    public override decimal Apply(Order order)
+    {
+        if (order.Customer.Country == Country)
+        {
+            return order.ItemsTotal * Percentage / 100;
+        }
+
+        return 0m;
+    }
 }
