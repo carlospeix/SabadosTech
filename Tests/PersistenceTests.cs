@@ -1,4 +1,5 @@
 using Mapping1;
+using Microsoft.EntityFrameworkCore;
 using Model1;
 
 namespace Tests;
@@ -28,6 +29,7 @@ public class PersistenceTests
     {
         _context.ChangeTracker.Clear();
         _context.Orders.RemoveRange(_context.Orders);
+        _context.Discounts.RemoveRange(_context.Discounts);
         _context.SaveChanges();
         _context.Dispose();
     }
@@ -123,6 +125,24 @@ public class PersistenceTests
             Assert.That(_context.Orders.Count, Is.EqualTo(0));
             // ... because OrderItems is not exposed
             Assert.That(_context.Set<OrderItem>().Count, Is.EqualTo(0));
+        });
+    }
+
+    [Test]
+    public void SavingDiscountsHierarchy()
+    {
+        var discount = new Discount("General discount", 10);
+        var categoryDiscount = new DiscountForCategory("Category discount", 10, _context.Categories.First());
+        var countryDiscount = new DiscountForCountry("Country discount", 10, _context.Countries.First());
+        _context.Discounts.AddRange(discount, categoryDiscount, countryDiscount);
+        _context.SaveChanges();
+
+        Assert.That(_context.Discounts.Count, Is.EqualTo(3));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_context.Discounts.Single(d => d.Id == discount.Id), Is.TypeOf(typeof(Discount)));
+            Assert.That(_context.Discounts.Single(d => d.Id == categoryDiscount.Id), Is.TypeOf(typeof(DiscountForCategory)));
+            Assert.That(_context.Discounts.Single(d => d.Id == countryDiscount.Id), Is.TypeOf(typeof(DiscountForCountry)));
         });
     }
 

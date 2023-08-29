@@ -2,6 +2,8 @@
 
 public class Discount
 {
+    protected Discount() { }
+
     public Discount(string name, decimal percentage)
     {
         Name = name;

@@ -2,6 +2,8 @@
 
 public class DiscountForCategory : Discount
 {
+    protected DiscountForCategory() : base() { }
+
     public DiscountForCategory(string name, decimal percentage, Category category) : base(name, percentage)
     {
         Category = category;

@@ -2,6 +2,8 @@
 
 public class DiscountForCountry : Discount
 {
+    protected DiscountForCountry() : base() { }
+
     public DiscountForCountry(string name, decimal percentage, Country country) : base(name, percentage)
     {
         Country = country;
