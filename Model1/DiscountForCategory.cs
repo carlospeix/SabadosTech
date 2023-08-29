@@ -11,34 +11,13 @@ public class DiscountForCategory : Discount
 
     public override bool AppliesTo(Order order)
     {
-        if (Category == null)
-        {
-            return true;
-        }
-
-        foreach (var orderItem in order.Items)
-        {
-            if (orderItem.Product.Category.Equals(Category))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return Category == null || order.Items.Any(item => item.Product.Category.Equals(Category));
     }
 
     public override decimal Apply(Order order)
     {
-        decimal discount = 0;
-
-        foreach (var orderItem in order.Items)
-        {
-            if (orderItem.Product.Category.Equals(Category))
-            {
-                discount += orderItem.Total * Percentage / 100;
-            }
-        }
-
-        return discount;
+        return order.Items
+            .Where(item => item.Product.Category == Category)
+            .Sum(item => item.Total * Percentage / 100);
     }
 }

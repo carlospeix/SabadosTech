@@ -11,26 +11,11 @@ public class DiscountForCountry : Discount
 
     public override bool AppliesTo(Order order)
     {
-        if (Country == null)
-        {
-            return true;
-        }
-
-        if (order.Customer.Country.Equals(Country))
-        {
-            return true;
-        }
-
-        return false;
+        return Country == null || order.Customer.Country.Equals(Country);
     }
 
     public override decimal Apply(Order order)
     {
-        if (order.Customer.Country == Country)
-        {
-            return order.ItemsTotal * Percentage / 100;
-        }
-
-        return 0m;
+        return order.Customer.Country != Country ? 0 : order.ItemsTotal * Percentage / 100;
     }
 }
