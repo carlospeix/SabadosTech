@@ -49,6 +49,8 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<DiscountForCountry>().HasOne(t => t.Country).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction); ;
         modelBuilder.Entity<DiscountForCategory>().HasOne(t => t.Category).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
 
+        // TODO: remove when persistence is configured
+        modelBuilder.Entity<Discount>().Ignore(t => t.ValidOn);
     }
 
     public DbSet<Product> Products { get; set; }

@@ -4,7 +4,8 @@ public class DiscountForCountry : Discount
 {
     protected DiscountForCountry() : base() { }
 
-    public DiscountForCountry(string name, decimal percentage, Country country) : base(name, percentage)
+    public DiscountForCountry(string name, decimal percentage, Country country, DateRange? validOn = null) :
+        base(name, percentage, validOn)
     {
         Country = country;
     }
@@ -13,7 +14,7 @@ public class DiscountForCountry : Discount
 
     public override bool AppliesTo(Order order)
     {
-        return Country == null || order.Customer.Country.Equals(Country);
+        return base.AppliesTo(order) && order.Customer.Country.Equals(Country);
     }
 
     public override decimal Apply(Order order)

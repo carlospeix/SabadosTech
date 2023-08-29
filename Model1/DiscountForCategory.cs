@@ -4,7 +4,8 @@ public class DiscountForCategory : Discount
 {
     protected DiscountForCategory() : base() { }
 
-    public DiscountForCategory(string name, decimal percentage, Category category) : base(name, percentage)
+    public DiscountForCategory(string name, decimal percentage, Category category, DateRange? validOn = null) :
+        base(name, percentage, validOn)
     {
         Category = category;
     }
@@ -13,7 +14,8 @@ public class DiscountForCategory : Discount
 
     public override bool AppliesTo(Order order)
     {
-        return Category == null || order.Items.Any(item => item.Product.Category.Equals(Category));
+        return base.AppliesTo(order) &&
+            order.Items.Any(item => item.Product.Category.Equals(Category));
     }
 
     public override decimal Apply(Order order)
