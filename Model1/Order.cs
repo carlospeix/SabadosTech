@@ -8,8 +8,6 @@ public class Order
     {
         Customer = customer;
         CreatedOn = DateTime.Now;
-        // TODO: remove this when configuring persistence
-        UpdateTotals();
     }
 
     public int Id { get; private set; }
