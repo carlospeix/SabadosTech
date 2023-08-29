@@ -2,12 +2,12 @@
 
 public class DiscountForCategory : Discount
 {
-    public DiscountForCategory(string name, decimal percentage = 0m, Category? category = default) : base(name, percentage)
+    public DiscountForCategory(string name, decimal percentage, Category category) : base(name, percentage)
     {
         Category = category;
     }
 
-    public Category? Category { get; private set; }
+    public Category Category { get; private set; }
 
     public override bool AppliesTo(Order order)
     {

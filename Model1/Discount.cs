@@ -2,7 +2,7 @@
 
 public class Discount
 {
-    public Discount(string name, decimal percentage = 0m)
+    public Discount(string name, decimal percentage)
     {
         Name = name;
         Percentage = percentage;

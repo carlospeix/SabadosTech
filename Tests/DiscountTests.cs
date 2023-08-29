@@ -28,7 +28,7 @@ public class DiscountTests
         order.AddItem(programmingProduct, 1);
         Assert.That(order.Total, Is.EqualTo(9.95m));
 
-        var discount = new Discount("No discount");
+        var discount = new Discount(name: "No discount", percentage: 0m);
         order.ApplyDiscount(discount);
 
         Assert.That(order.Total, Is.EqualTo(9.95m));

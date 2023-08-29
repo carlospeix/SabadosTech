@@ -2,12 +2,12 @@
 
 public class DiscountForCountry : Discount
 {
-    public DiscountForCountry(string name, decimal percentage = 0m, Country? country = default) : base(name, percentage)
+    public DiscountForCountry(string name, decimal percentage, Country country) : base(name, percentage)
     {
         Country = country;
     }
 
-    public Country? Country { get; private set; }
+    public Country Country { get; private set; }
 
     public override bool AppliesTo(Order order)
     {
