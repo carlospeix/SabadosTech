@@ -8,6 +8,8 @@ public class Order
     {
         Customer = customer;
         CreatedOn = DateTime.Now;
+        // TODO: remove this when configuring persistence
+        UpdateTotals();
     }
 
     public int Id { get; private set; }
@@ -20,7 +22,7 @@ public class Order
     public void AddItem(Product product, int quantity = 1)
     {
         _items.Add(new OrderItem(this, product, quantity));
-        UpdateTotal();
+        UpdateTotals();
     }
 
     public void RemoveItemFor(Product aProduct)
@@ -31,9 +33,11 @@ public class Order
             return;
         }
         _items.Remove(item);
-        UpdateTotal();
+        UpdateTotals();
     }
 
+    public decimal ItemsTotal { get; private set; }
+    public decimal Discount { get; private set; }
     public decimal Total { get; private set; }
 
     public void IncreaseQuantityFor(Product aProduct)
@@ -46,7 +50,7 @@ public class Order
         }
         item.IncreaseQuantity();
 
-        UpdateTotal();
+        UpdateTotals();
     }
 
     public void DecreaseQuantityFor(Product aProduct)
@@ -67,25 +71,32 @@ public class Order
             item.DecreaseQuantity();
         }
 
-        UpdateTotal();
+        UpdateTotals();
     }
 
     public void ApplyDiscount(Discount discount)
     {
         if (discount.AppliesTo(this))
         {
-            _appliedDiscounts.Add(discount);
+            if (!_appliedDiscounts.Contains(discount))
+            {
+                _appliedDiscounts.Add(discount);
+            }
         }
-        UpdateTotal();
+
+        UpdateTotals();
     }
     private readonly HashSet<Discount> _appliedDiscounts = new();
 
-    private void UpdateTotal()
+    private void UpdateTotals()
     {
-        Total = _items.Sum(oi => oi.Total);
+        ItemsTotal = _items.Sum(oi => oi.Total);
+
         foreach (var discount in _appliedDiscounts)
         {
-            Total = Total * (1 - discount.Percentage / 100);
+            Discount = ItemsTotal * discount.Percentage / 100;
         }
+
+        Total = ItemsTotal - Discount;
     }
 }

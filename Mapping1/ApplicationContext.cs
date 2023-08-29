@@ -31,6 +31,10 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<Order>().Navigation(t => t.Items).AutoInclude();
         modelBuilder.Entity<Order>().HasOne(t => t.Customer).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<Order>().Navigation(t => t.Customer).AutoInclude();
+        
+        // TODO: remove this when configuring persistence
+        modelBuilder.Entity<Order>().Ignore(t => t.ItemsTotal);
+        modelBuilder.Entity<Order>().Ignore(t => t.Discount);
 
         modelBuilder.Entity<OrderItem>().ToTable("OrderItems").HasKey(t => t.Id);
         modelBuilder.Entity<OrderItem>().Property(t => t.ProductPriceWhenOrdered).HasColumnType("decimal").HasPrecision(18, 2);
