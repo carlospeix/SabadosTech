@@ -80,10 +80,23 @@ public class DiscountTests
         order.AddItem(programmingProduct, 1);
         Assert.That(order.Total, Is.EqualTo(9.95m));
 
-        //var discount = new Discount(name: "Charruan coupon", percentage: 5, country: uruguay);
         var discount = new DiscountForCountry(name: "Charruan coupon", percentage: 5, country: uruguay);
         order.ApplyDiscount(discount);
 
         Assert.That(order.Total, Is.EqualTo(9.95m));
+    }
+
+    [Test]
+    public void SportsCouponAppliesOnlyOnSportsProducts()
+    {
+        var order = new Order(aCustomer);
+        order.AddItem(sportsProduct, 1);        // 299.95m
+        order.AddItem(programmingProduct, 1);   //   9.95m
+        Assert.That(order.Total, Is.EqualTo(299.95m + 9.95m));
+
+        var discount = new DiscountForCategory(name: "Sports coupon", percentage: 10, category: sportsCategory);
+        order.ApplyDiscount(discount);
+
+        Assert.That(order.Total, Is.EqualTo(299.95m * 0.90m + 9.95m));
     }
 }

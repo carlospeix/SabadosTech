@@ -26,4 +26,19 @@ public class DiscountForCategory : Discount
 
         return false;
     }
+
+    public override decimal Apply(Order order)
+    {
+        decimal discount = 0;
+
+        foreach (var orderItem in order.Items)
+        {
+            if (orderItem.Product.Category.Equals(Category))
+            {
+                discount += orderItem.Total * Percentage / 100;
+            }
+        }
+
+        return discount;
+    }
 }

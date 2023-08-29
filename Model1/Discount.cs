@@ -16,4 +16,9 @@ public class Discount
     {
         return true;
     }
+
+    public virtual decimal Apply(Order order)
+    {
+        return order.ItemsTotal * Percentage / 100;
+    }
 }

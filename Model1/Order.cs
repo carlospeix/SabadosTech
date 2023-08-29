@@ -94,7 +94,7 @@ public class Order
 
         foreach (var discount in _appliedDiscounts)
         {
-            Discount = ItemsTotal * discount.Percentage / 100;
+            Discount += discount.Apply(this);
         }
 
         Total = ItemsTotal - Discount;
