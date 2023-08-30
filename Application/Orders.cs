@@ -1,4 +1,6 @@
-﻿namespace Application;
+﻿using Model1;
+
+namespace Application;
 
 public class Orders
 {
@@ -50,6 +52,29 @@ public class Orders
 
         order.AddItem(product, quantity);
 
+        context.SaveChanges();
+
+        return order;
+    }
+
+    public Order? ApplyDiscount(int orderId, string discountName)
+    {
+        using var context = new ApplicationContext();
+
+        var order = context.Orders.FirstOrDefault(c => c.Id == orderId);
+        if (order == null)
+        {
+            return null;
+        }
+
+        var discount = context.Discounts.FirstOrDefault(o => o.Name == discountName);
+        if (discount == null)
+        {
+            return null;
+        }
+
+        order.ApplyDiscount(discount);
+        
         context.SaveChanges();
 
         return order;

@@ -47,8 +47,12 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<Discount>().HasIndex("Discriminator");
         modelBuilder.Entity<Discount>().OwnsOne(t => t.ValidOn);
         modelBuilder.Entity<Discount>().Property(t => t.Percentage).HasColumnType("decimal").HasPrecision(18, 2);
-        modelBuilder.Entity<DiscountForCountry>().HasOne(t => t.Country).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction); ;
+        
+        modelBuilder.Entity<DiscountForCountry>().HasOne(t => t.Country).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<DiscountForCountry>().Navigation(t => t.Country).AutoInclude();
+        
         modelBuilder.Entity<DiscountForCategory>().HasOne(t => t.Category).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<DiscountForCategory>().Navigation(t => t.Category).AutoInclude();
     }
 
     public DbSet<Product> Products { get; set; }

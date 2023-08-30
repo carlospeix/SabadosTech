@@ -1,0 +1,34 @@
+﻿
+info: 8/29/2023 21:17:11.257 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (7ms) [Parameters=[@__orderId_0='549'], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Id], [t].[CreatedOn], [t].[CustomerId], [t].[Discount], [t].[ItemsTotal], [t].[Total], [t].[Id0], [t].[CountryId], [t].[Name], [t0].[Id], [t0].[OrderId], [t0].[ProductId], [t0].[ProductPriceWhenOrdered], [t0].[Quantity], [t0].[Total], [t0].[Id0], [t0].[CategoryId], [t0].[Name], [t0].[Price]
+      FROM (
+          SELECT TOP(1) [o].[Id], [o].[CreatedOn], [o].[CustomerId], [o].[Discount], [o].[ItemsTotal], [o].[Total], [c].[Id] AS [Id0], [c].[CountryId], [c].[Name]
+          FROM [Orders] AS [o]
+          INNER JOIN [Customers] AS [c] ON [o].[CustomerId] = [c].[Id]
+          WHERE [o].[Id] = @__orderId_0
+      ) AS [t]
+      LEFT JOIN (
+          SELECT [o0].[Id], [o0].[OrderId], [o0].[ProductId], [o0].[ProductPriceWhenOrdered], [o0].[Quantity], [o0].[Total], [p].[Id] AS [Id0], [p].[CategoryId], [p].[Name], [p].[Price]
+          FROM [OrderItems] AS [o0]
+          INNER JOIN [Products] AS [p] ON [o0].[ProductId] = [p].[Id]
+      ) AS [t0] ON [t].[Id] = [t0].[OrderId]
+      ORDER BY [t].[Id], [t].[Id0], [t0].[Id]
+
+
+info: 8/29/2023 21:17:11.272 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (0ms) [Parameters=[@__discountName_0='BLACK-FRIDAY-SPORTS' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [d].[Id], [d].[Discriminator], [d].[Name], [d].[Percentage], [d].[CategoryId], [d].[CountryId], [d].[ValidOn_End], [d].[ValidOn_Start], [c].[Id], [c].[Name], [c0].[Id], [c0].[Name]
+      FROM [Discounts] AS [d]
+      LEFT JOIN [Categories] AS [c] ON [d].[CategoryId] = [c].[Id]
+      LEFT JOIN [Countries] AS [c0] ON [d].[CountryId] = [c0].[Id]
+      WHERE [d].[Name] = @__discountName_0
+
+
+info: 8/29/2023 21:17:11.339 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (2ms) [Parameters=[@p2='549', @p0='12.0000' (Precision = 18) (Scale = 2), @p1='118.0000' (Precision = 18) (Scale = 2)], CommandType='Text', CommandTimeout='30']
+      SET IMPLICIT_TRANSACTIONS OFF;
+      SET NOCOUNT ON;
+      UPDATE [Orders] SET [Discount] = @p0, [Total] = @p1
+      OUTPUT 1
+      WHERE [Id] = @p2;

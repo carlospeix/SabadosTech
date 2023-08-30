@@ -55,6 +55,41 @@ public class AnalysisTests
     }
 
     [Test, Explicit]
+    public void ApplyDiscountToOrder()
+    {
+        var orderId = _context.Orders.First().Id;
+        var discountName = "BLACK-FRIDAY-SPORTS";
+
+        var ordersApp = new Orders();
+        _ = ordersApp.ApplyDiscount(orderId: orderId, discountName: discountName);
+    }
+
+    [Test, Explicit]
+    public void XCreateOrderAndDiscount()
+    {
+        var sports = _context.Categories.Single(c => c.Id == 3);  // Sports
+        var validityRange = new DateRange(DateTime.Now.AddDays(-10), DateTime.Now.AddDays(10));
+        var discount = new DiscountForCategory(name: "BLACK-FRIDAY-SPORTS", percentage: 10, sports, validityRange);
+        _context.Discounts.Add(discount);
+
+        var customer = _context.Customers.Single(c => c.Id == 1);
+        var order = new Order(customer);
+        order.AddItem(_context.Products.Single(c => c.Id == 3), 1); // Surf appliance
+        order.AddItem(_context.Products.Single(c => c.Id == 2), 1); // Vim
+        _context.Orders.Add(order);
+
+        _context.SaveChanges();
+    }
+
+    [Test, Explicit]
+    public void XRemoveOrderAndDiscount()
+    {
+        _context.Orders.RemoveRange(_context.Orders);
+        _context.Discounts.RemoveRange(_context.Discounts);
+        _context.SaveChanges();
+    }
+
+    [Test, Explicit]
     public void XGenerate20Orders()
     {
         CreateOrderBulk();
@@ -89,19 +124,6 @@ public class AnalysisTests
             builder.AppendLine($"    -> Item: {item.Product.Name} / {item.Quantity}");
 
         return builder.ToString();
-    }
-
-    private Order CreateOrder()
-    {
-        var vsc = _context.Products.Single(c => c.Id == 1);
-        var vim = _context.Products.Single(c => c.Id == 2);
-        var customer = _context.Customers.Single(c => c.Id == 1);
-
-        var order = new Order(customer);
-        order.AddItem(vsc);
-        order.AddItem(vim);
-
-        return order;
     }
 
     private void CreateOrderBulk()
