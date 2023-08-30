@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Model1;
 
@@ -33,6 +34,8 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<Order>().Navigation(t => t.Items).AutoInclude();
         modelBuilder.Entity<Order>().HasOne(t => t.Customer).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<Order>().Navigation(t => t.Customer).AutoInclude();
+        modelBuilder.Entity<Order>().HasMany(t => t.Discounts).WithMany("Orders").UsingEntity("DiscountApplications");
+        modelBuilder.Entity<Order>().Navigation(t => t.Discounts).AutoInclude();
 
         modelBuilder.Entity<OrderItem>().ToTable("OrderItems").HasKey(t => t.Id);
         modelBuilder.Entity<OrderItem>().Property(t => t.ProductPriceWhenOrdered).HasColumnType("decimal").HasPrecision(18, 2);

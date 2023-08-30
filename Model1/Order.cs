@@ -76,21 +76,22 @@ public class Order
     {
         if (discount.AppliesTo(this))
         {
-            if (!_appliedDiscounts.Contains(discount))
+            if (!_discounts.Contains(discount))
             {
-                _appliedDiscounts.Add(discount);
+                _discounts.Add(discount);
             }
         }
 
         UpdateTotals();
     }
-    private readonly HashSet<Discount> _appliedDiscounts = new();
+    public IReadOnlyCollection<Discount> Discounts => _discounts.ToList().AsReadOnly();
+    private readonly HashSet<Discount> _discounts = new();
 
     private void UpdateTotals()
     {
         ItemsTotal = _items.Sum(oi => oi.Total);
 
-        Discount = _appliedDiscounts
+        Discount = _discounts
             .Sum(discount => discount.Apply(this));
 
         Total = ItemsTotal - Discount;
