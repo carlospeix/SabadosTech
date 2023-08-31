@@ -49,9 +49,18 @@ public class AnalysisTests
     public void ReportSalesByCountryAndCategory()
     {
         var reportsApp = new Reports();
-        var report = reportsApp.SalesByCountryAndCategory();
+        //var report = reportsApp.SalesByCountryAndCategory();
+        //var reportCategory = reportsApp.SalesByCountryAndCategory(categoryId: 2);
+        //var reportCountry = reportsApp.SalesByCountryAndCategory(countryId: 1);
+        //var reportCountryAndCategory = reportsApp.SalesByCountryAndCategory(countryId: 1, categoryId: 2);
+        var reportCountriesAndCategories = reportsApp.SalesByCountriesAndCategories(countryIds: new int[] { 1, 2 }, categoryIds: new int[] { 3, 4 });
+        //var reportCountriesAndCategories = reportsApp.SalesByCountriesAndCategories(countryIds: new int[] { 1 }, categoryIds: new int[] { 2 });
 
-        TestContext.Out.WriteLine(JsonConvert.SerializeObject(report, Formatting.Indented));
+        //TestContext.Out.WriteLine(JsonConvert.SerializeObject(report, Formatting.Indented));
+        //TestContext.Out.WriteLine(JsonConvert.SerializeObject(reportCategory, Formatting.Indented));
+        //TestContext.Out.WriteLine(JsonConvert.SerializeObject(reportCountry, Formatting.Indented));
+        //TestContext.Out.WriteLine(JsonConvert.SerializeObject(reportCountryAndCategory, Formatting.Indented));
+        //TestContext.Out.WriteLine(JsonConvert.SerializeObject(reportCountriesAndCategories, Formatting.Indented));
     }
 
     [Test, Explicit]
