@@ -1,5 +1,5 @@
+using System.Text.Json;
 using System.Text;
-using Newtonsoft.Json;
 using Application;
 using Mapping1;
 using Model1;
@@ -49,27 +49,28 @@ public class AnalysisTests
     public void GetDiscountsLike()
     {
         var ordersApp = new Orders();
-        var discounts = ordersApp.GetDiscountsByName("*sports");
+        var discounts = ordersApp.GetDiscountsByName("");
 
-        TestContext.Out.WriteLine(JsonConvert.SerializeObject(discounts, Formatting.Indented));
+        TestContext.Out.WriteLine(SerializeResult(discounts));
     }
 
     [Test, Explicit]
     public void ReportSalesByCountryAndCategory()
     {
         var reportsApp = new Reports();
-        //var report = reportsApp.SalesByCountryAndCategory();
+
+        var report = reportsApp.SalesByCountryAndCategory();
         //var reportCategory = reportsApp.SalesByCountryAndCategory(categoryId: 2);
         //var reportCountry = reportsApp.SalesByCountryAndCategory(countryId: 1);
         //var reportCountryAndCategory = reportsApp.SalesByCountryAndCategory(countryId: 1, categoryId: 2);
-        var reportCountriesAndCategories = reportsApp.SalesByCountriesAndCategories(countryIds: new int[] { 1, 2 }, categoryIds: new int[] { 3, 4 });
+        //var reportCountriesAndCategories = reportsApp.SalesByCountriesAndCategories(countryIds: new int[] { 1, 2 }, categoryIds: new int[] { 3, 4 });
         //var reportCountriesAndCategories = reportsApp.SalesByCountriesAndCategories(countryIds: new int[] { 1 }, categoryIds: new int[] { 2 });
 
-        //TestContext.Out.WriteLine(JsonConvert.SerializeObject(report, Formatting.Indented));
-        //TestContext.Out.WriteLine(JsonConvert.SerializeObject(reportCategory, Formatting.Indented));
-        //TestContext.Out.WriteLine(JsonConvert.SerializeObject(reportCountry, Formatting.Indented));
-        //TestContext.Out.WriteLine(JsonConvert.SerializeObject(reportCountryAndCategory, Formatting.Indented));
-        //TestContext.Out.WriteLine(JsonConvert.SerializeObject(reportCountriesAndCategories, Formatting.Indented));
+        TestContext.Out.WriteLine(SerializeResult(report));
+        //TestContext.Out.WriteLine(SerializeResult(reportCategory));
+        //TestContext.Out.WriteLine(SerializeResult(reportCountry));
+        //TestContext.Out.WriteLine(SerializeResult(reportCountryAndCategory));
+        //TestContext.Out.WriteLine(SerializeResult(reportCountriesAndCategories));
     }
 
     [Test, Explicit]
@@ -159,5 +160,11 @@ public class AnalysisTests
         }
 
         _context.SaveChanges();
+    }
+
+    private string SerializeResult(object? result)
+    {
+        JsonSerializerOptions options = new(JsonSerializerDefaults.Web) { WriteIndented = true };
+        return System.Text.Json.JsonSerializer.Serialize(result, options);
     }
 }

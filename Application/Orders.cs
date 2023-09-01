@@ -1,6 +1,4 @@
-﻿using Model1;
-
-namespace Application;
+﻿namespace Application;
 
 public class Orders
 {

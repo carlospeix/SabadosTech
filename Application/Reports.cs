@@ -1,6 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-
-namespace Application;
+﻿namespace Application;
 
 public class Reports
 {
