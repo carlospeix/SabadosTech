@@ -74,6 +74,17 @@ public class AnalysisTests
     }
 
     [Test, Explicit]
+    public void CatalogQueries()
+    {
+        var catalogApp = new Catalog();
+
+        var products = catalogApp.ProductsByFilter();
+        var products1 = catalogApp.ProductsByFilter(categoryId: 2, maxPrice: 10.000m);
+
+        TestContext.Out.WriteLine(SerializeResult(products));
+    }
+
+    [Test, Explicit]
     public void ApplyDiscountToOrder()
     {
         var orderId = _context.Orders.First().Id;
