@@ -57,6 +57,15 @@ public class Orders
         return order;
     }
 
+    public IReadOnlyList<Discount> GetDiscountsByName(string search)
+    {
+        using var context = new ApplicationContext();
+
+        return context.Discounts
+            .Where(o => o.Name.Contains(search))
+            .ToList();
+    }
+
     public Order? ApplyDiscount(int orderId, string discountName)
     {
         using var context = new ApplicationContext();

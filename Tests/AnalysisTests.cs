@@ -46,6 +46,15 @@ public class AnalysisTests
     }
 
     [Test, Explicit]
+    public void GetDiscountsLike()
+    {
+        var ordersApp = new Orders();
+        var discounts = ordersApp.GetDiscountsByName("*sports");
+
+        TestContext.Out.WriteLine(JsonConvert.SerializeObject(discounts, Formatting.Indented));
+    }
+
+    [Test, Explicit]
     public void ReportSalesByCountryAndCategory()
     {
         var reportsApp = new Reports();
