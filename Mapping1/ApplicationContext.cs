@@ -20,9 +20,11 @@ public class ApplicationContext : DbContext
 
         modelBuilder.Entity<Product>().HasKey(t => t.Id);
         modelBuilder.Entity<Product>().Property(t => t.Price).HasColumnType("decimal").HasPrecision(18, 2);
+        modelBuilder.Entity<Product>().Property(t => t.Name).HasMaxLength(500);
         modelBuilder.Entity<Product>().HasOne(t => t.Category).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Customer>().HasKey(t => t.Id);
+        modelBuilder.Entity<Customer>().Property(t => t.Name).HasMaxLength(500);
         modelBuilder.Entity<Customer>().HasOne(t => t.Country).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Order>().HasKey(t => t.Id);
@@ -43,9 +45,14 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<OrderItem>().Navigation(t => t.Product).AutoInclude();
 
         modelBuilder.Entity<Country>().HasKey(t => t.Id);
+        modelBuilder.Entity<Country>().Property(t => t.Name).HasMaxLength(500);
+
+        modelBuilder.Entity<Category>().HasKey(t => t.Id);
+        modelBuilder.Entity<Category>().Property(t => t.Name).HasMaxLength(500);
 
         modelBuilder.Entity<Discount>().HasKey(t => t.Id);
         modelBuilder.Entity<Discount>().Property<string>("Discriminator");
+        modelBuilder.Entity<Discount>().Property(t => t.Name).HasMaxLength(500);
         modelBuilder.Entity<Discount>().HasIndex("Discriminator");
         modelBuilder.Entity<Discount>().OwnsOne(t => t.ValidOn);
         modelBuilder.Entity<Discount>().Property(t => t.Percentage).HasColumnType("decimal").HasPrecision(18, 2);
